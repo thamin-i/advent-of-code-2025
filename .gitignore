@@ -1,0 +1,9 @@
+# Ignore folders
+__pycache__
+.mypy_cache
+.tool-versions
+.venv
+
+# Ignore files
+*.json
+*.txt

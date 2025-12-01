@@ -1,0 +1,39 @@
+[build-system]
+requires = ["poetry-core>=1.8.4"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "advent_of_code_2025"
+version = "0.1.0"
+description = "Advent of code 2024."
+authors = ["Guillaume Gilloux <Guillaume.Gilloux@sealk.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+commit-check = "^0.8.5"
+isort = "^5.13.2"
+mypy = "^1.13.0"
+pre_commit = "^4.0.1"
+pylint = "^3.3.2"
+flake8 = "^7.1.1"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.pylint."MESSAGES CONTROL"]
+max-line-length = 100
+
+[tool.black]
+line-length = 80
+
+[tool.isort]
+multi_line_output=3
+include_trailing_comma=true
+force_grid_wrap=0
+use_parentheses=true
+line_length=80
