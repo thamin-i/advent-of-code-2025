@@ -1,6 +1,7 @@
 """Common methods for the Day 02"""
 
 import os
+import re
 import typing as t
 
 
@@ -26,3 +27,25 @@ def parse_id_ranges_file(
             for line in input_fd.read().split(",")
         ]
     return id_ranges
+
+
+def sum_invalid_ids(
+    id_ranges: t.List[t.Tuple[int, int]], match_many: bool = False
+) -> int:
+    """Sum all invalid IDs based on the given ID ranges.
+
+    Args:
+        id_ranges (t.List[t.Tuple[int, int]]): List of ID ranges.
+        match_many (bool): Whether to match many repetitions or just one.
+
+    Returns:
+        int: Sum of all invalid IDs.
+    """
+    return sum(
+        id_number
+        for range_start, range_end in id_ranges
+        for id_number in range(range_start, range_end + 1)
+        if re.fullmatch(
+            r"(.+?)\1+" if match_many else r"(.+?)\1", str(id_number)
+        )
+    )
