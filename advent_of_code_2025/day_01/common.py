@@ -24,3 +24,33 @@ def parse_rotations_file(file_name: str) -> t.List[t.Tuple[int, int]]:
             for line in input_fd.read().splitlines()
         ]
     return rotations
+
+
+def compute_password(
+    rotations: t.List[t.Tuple[int, int]],
+    only_count_pointed: bool,
+    pointed_number: int = 50,
+) -> int:
+    """Compute the password based on the rotations.
+
+    Args:
+        rotations (t.List[t.Tuple[int, int]]): List of rotations.
+        only_count_pointed (bool): Whether to only count pointed numbers.
+        pointed_number (int): Initial pointed number.
+
+
+    Returns:
+        int: The computed password.
+    """
+    password: int = 0
+    for rotation in rotations:
+        if not only_count_pointed:
+            password += sum(
+                1
+                for i in range(1, rotation[1] + 1)
+                if (pointed_number + rotation[0] * i) % 100 == 0
+            )
+        pointed_number = (pointed_number + rotation[0] * rotation[1]) % 100
+        if only_count_pointed and pointed_number == 0:
+            password += 1
+    return password

@@ -45,6 +45,31 @@ def get_available_parts(day_folder: str) -> t.List[t.Tuple[int, str]]:
     return available_parts
 
 
+def launch_solution(day: int, part: int) -> None:
+    """Launch the selected solution.
+
+    Args:
+        day (int): Day number.
+        part (int): Part number.
+    """
+    day_folder: str = f"day_{day:02d}"
+    part_file: str = f"part_{part:02d}"
+    module_path: str = f"advent_of_code_2025.{day_folder}.{part_file}"
+
+    click.echo(f"\n🚀 Running Day {day}, Part {part}...\n")
+    click.echo("=" * 50)
+
+    module = importlib.import_module(module_path)
+    if hasattr(module, "main"):
+        module.main()
+    else:
+        click.echo(f"⚠️  No main() function found in {part_file}.py", err=True)
+        sys.exit(1)
+
+    click.echo("=" * 50)
+    click.echo("\n✅ Done!")
+
+
 @click.command()
 @click.option(
     "--day",
@@ -101,21 +126,7 @@ def main(day: int | None = None, part: int | None = None) -> None:
         )
         sys.exit(1)
 
-    # Run the selected solution
-    click.echo(f"\n🚀 Running Day {day}, Part {part}...\n")
-    click.echo("=" * 50)
-
-    module_path = f"advent_of_code_2025.{day_folder}.{part_file}"
-    module = importlib.import_module(module_path)
-
-    if hasattr(module, "main"):
-        module.main()
-    else:
-        click.echo(f"⚠️  No main() function found in {part_file}.py", err=True)
-        sys.exit(1)
-
-    click.echo("=" * 50)
-    click.echo("\n✅ Done!")
+    launch_solution(day, part)
 
 
 if __name__ == "__main__":
