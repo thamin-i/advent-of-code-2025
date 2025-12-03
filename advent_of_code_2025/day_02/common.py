@@ -1,27 +1,22 @@
 """Common methods for the Day 02"""
 
-import os
 import re
 import typing as t
+from pathlib import Path
 
 
-def parse_id_ranges_file(
-    file_name: str, from_file: str
-) -> t.List[t.Tuple[int, int]]:
+def parse_id_ranges_file(file_name: str) -> t.List[t.Tuple[int, int]]:
     """Parse the ID ranges from the input file.
 
     Args:
         file_name (str): Name of the input file.
-        from_file (str): Reference file to determine the path.
 
     Returns:
         t.List[t.Tuple[int, int]]: List of ID ranges as tuples.
     """
-    absolute_path_to_file: str = os.path.realpath(
-        os.path.join(os.getcwd(), os.path.dirname(from_file), file_name)
-    )
     id_ranges: t.List[t.Tuple[int, int]] = []
-    with open(absolute_path_to_file, "r", encoding="utf-8") as input_fd:
+    file_path: Path = Path(__file__).parent / file_name
+    with open(file_path, "r", encoding="utf-8") as input_fd:
         id_ranges = [
             (int(line.split("-")[0]), int(line.split("-")[1]))
             for line in input_fd.read().split(",")
@@ -30,7 +25,7 @@ def parse_id_ranges_file(
 
 
 def sum_invalid_ids(
-    id_ranges: t.List[t.Tuple[int, int]], match_many: bool = False
+    id_ranges: t.List[t.Tuple[int, int]], match_many: bool
 ) -> int:
     """Sum all invalid IDs based on the given ID ranges.
 
