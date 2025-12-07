@@ -12,6 +12,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.13"
 click = "^8.3.1"
+networkx = "^3.6"
 
 [tool.poetry.scripts]
 aoc = "advent_of_code_2025.cli:main"
