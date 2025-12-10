@@ -13,6 +13,8 @@ readme = "README.md"
 python = "^3.13"
 click = "^8.3.1"
 networkx = "^3.6"
+pulp = "^3.3.0"
+numpy = "^2.3.5"
 
 [tool.poetry.scripts]
 aoc = "advent_of_code_2025.cli:main"
