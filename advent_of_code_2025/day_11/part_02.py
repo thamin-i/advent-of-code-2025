@@ -44,39 +44,6 @@ def node_reachable_from(
     return visited
 
 
-def simplify_linear_chains_in_graph(
-    graph: t.Dict[str, t.List[str]], protected_nodes: t.Set[str]
-) -> t.Dict[str, t.List[str]]:
-    """Simplify linear chains that can be found in the graph
-        by merging/removing nodes that have exactly one neighbor,
-        except for the protected nodes.
-
-    Args:
-        graph (t.Dict[str, t.List[str]]): Graph as a dictionary.
-        protected_nodes (t.Set[str]): Set of nodes that should not be removed.
-
-    Returns:
-        t.Dict[str, t.List[str]]: Simplified graph as a dictionary.
-    """
-    changed: bool = True
-    while changed:
-        changed = False
-        reversed_graph: t.Dict[str, t.List[str]] = reverse_graph(graph)
-
-        for node, neighbors in list(graph.items()):
-            if node in protected_nodes or len(neighbors) != 1:
-                continue
-            target: str = neighbors[0]
-            for parent in reversed_graph.get(node, []):
-                graph[parent] = [
-                    target if x == node else x for x in graph[parent]
-                ]
-            del graph[node]
-            changed = True
-            break
-    return graph
-
-
 def prune_non_used_nodes_in_graph(
     graph: t.Dict[str, t.List[str]], start_node: str, end_node: str
 ) -> t.Dict[str, t.List[str]]:
@@ -140,26 +107,21 @@ def optimize_graph_and_count_paths(graph: t.Dict[str, t.List[str]]) -> int:
     end_node: str = "out"
     mandatory_nodes: t.List[str] = ["fft", "dac"]
 
-    # Step 1): simplify linear chains
-    graph = simplify_linear_chains_in_graph(
-        graph.copy(), protected_nodes=set(mandatory_nodes)
-    )
-
-    # Step 2): prune nodes that cannot reach end or be reached from start
+    # Step 1): prune nodes that cannot reach end or be reached from start
     graph = prune_non_used_nodes_in_graph(graph, start_node, end_node)
 
-    # Step 3): List all possible paths for start<->A A<->B and B<->end
+    # Step 2): List all possible paths for start<->A A<->B and B<->end
     # and multiply their counts to get the total number of valid paths
     paths_count: int = 1
     for start, end in list(
         zip([start_node] + mandatory_nodes, mandatory_nodes + [end_node])
     ):
-        # Step 3.c): Multiply the number of paths for each segment
+        # Step 2.c): Multiply the number of paths for each segment
         paths_count *= len(
             list(
-                # Step 3.b): List all paths between the two nodes
+                # Step 2.b): List all paths between the two nodes
                 list_paths_in_graph(
-                    # Step 3.a): Prune the graph for the current start-end pair
+                    # Step 2.a): Prune the graph for the current start-end pair
                     prune_non_used_nodes_in_graph(graph, start, end),
                     start,
                     end,
